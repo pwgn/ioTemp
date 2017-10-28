@@ -3,8 +3,8 @@
 
 #define LOW_TEMP_THRESHOLD 19
 
-int CALIBRATION_ANALOG_HIGH_READING 970;
-int CALIBRATION_ANALOG_LOW_READING 320;
+#define CALIBRATION_ANALOG_HIGH_READING 970
+#define CALIBRATION_ANALOG_LOW_READING 320
 
 
 ThreadController threadController = ThreadController();
@@ -24,7 +24,7 @@ void setup(void) {
   tempThread->setInterval(10000);
 
   soilThread->onRun(runSoil);
-  soilThread->setInterval(1000);
+  soilThread->setInterval(10000);
 
   threadController.add(tempThread);
   threadController.add(soilThread);

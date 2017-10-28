@@ -1,7 +1,7 @@
 #define ANALOG_IN A0
 
-int _calibrationAnalogHighReading 1024;
-int _calibrationAnalogLowReading 0;
+int _calibrationAnalogHighReading = 1024;
+int _calibrationAnalogLowReading = 0;
 
 int _lastSoilMoisture;
 
