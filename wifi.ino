@@ -1,3 +1,5 @@
+#include "WifiEndpoint.h"
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -8,7 +10,11 @@ const char* password = "worldwideweb";
 
 ESP8266WebServer server(80);
 
-void setupWifi(void){
+void setupWifi(){
+  WifiEndpoint tempEndpoint = {"temp", handleTemp};
+  WifiEndpoint soilEndpoint = {"moisture", handleMoisture};
+
+
   WiFi.begin(ssid, password);
   Serial.println("");
 
@@ -27,7 +33,8 @@ void setupWifi(void){
     Serial.println("MDNS responder started");
   }
 
-  server.on("/", handleRoot);
+  addEndpoint(tempEndpoint);
+  addEndpoint(soilEndpoint);
 
   server.onNotFound(handleNotFound);
 
@@ -39,8 +46,10 @@ void loopWifi(void) {
   server.handleClient();
 }
 
-void handleRoot() {
-  server.send(200, "application/json", "{\"ds18b20\":" + String(getDS18B20Temperature(), 2) + "}");
+void addEndpoint(WifiEndpoint endpoint) {
+  String ep = "/" + endpoint.name;
+  Serial.println(ep);
+  server.on(ep.c_str(), endpoint.callback);
 }
 
 void handleNotFound(){
@@ -56,4 +65,12 @@ void handleNotFound(){
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
+}
+
+void handleTemp(void) {
+  server.send(200, "application/json", "{\"temp\":" + String(getDS18B20Temperature(), 2) + "}");
+}
+
+void handleMoisture(void) {
+  server.send(200, "application/json", "{\"moisture\":" + String(getSoilMoisture()) + "}");
 }

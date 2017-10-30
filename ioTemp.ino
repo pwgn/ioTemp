@@ -1,3 +1,5 @@
+#include "WifiEndpoint.h"
+
 #include <Thread.h>
 #include <ThreadController.h>
 
